@@ -1,17 +1,19 @@
 import Button from "./Button";
-import { eachDayOfInterval, endOfWeek, startOfWeek, format } from "date-fns";
+import {
+	eachDayOfInterval,
+	endOfWeek,
+	startOfWeek,
+	format,
+	isFuture,
+} from "date-fns";
 
-const Habits = [
-	{ id: "1", habit: "coding" },
-	{ id: "2", habit: "Sleep" },
-	{ id: "3", habit: "Eat" },
-];
+export type Habit = { id: string; name: string };
 
 type HabitItemProps = {
-	habit: {
-		id: string;
-		habit: string;
-	};
+	habit: Habit;
+};
+type HabitListProps = {
+	habits: Habit[];
 };
 
 function HabitItem({ habit }: HabitItemProps) {
@@ -24,15 +26,21 @@ function HabitItem({ habit }: HabitItemProps) {
 		<div className="rounded-xl bg-zinc-800 p-4 flex flex-col gap-3">
 			<div className="flex items-center justify-between">
 				<div className="flex gap-3 items-center">
-					<span className="font-medium">{habit.habit}</span>
+					<span className="font-medium">{habit.name}</span>
 					<span className="text-sm text-amber-400"> 3 </span>
 				</div>
-				<Button variant="ghost-destruction">Delete</Button>
+				<Button variant="ghost-destruction" className="text-xs">
+					Delete
+				</Button>
 			</div>
 
 			<div className="flex gap-2">
 				{visibledates.map((date) => (
-					<Button key={date.toISOString()} disabled>
+					<Button
+						key={date.toISOString()}
+						disabled={isFuture(date)}
+						className="flex flex-1 flex-col items-center gap-0.5 rounded-lg text-sm"
+					>
 						<span className="font-medium">{format(date, "EEE")}</span>
 						<span>{format(date, "d")}</span>
 					</Button>
@@ -42,8 +50,8 @@ function HabitItem({ habit }: HabitItemProps) {
 	);
 }
 
-const HabitList = () => {
-	if (Habits.length === 0) {
+const HabitList = ({ habits }: HabitListProps) => {
+	if (habits.length === 0) {
 		return (
 			<div className="text-center text-zinc-400 py-12">
 				No Listed habits, add a habit to start
@@ -52,7 +60,7 @@ const HabitList = () => {
 	}
 	return (
 		<div className="flex flex-col gap-3">
-			{Habits.map((habit) => (
+			{habits.map((habit) => (
 				<HabitItem key={habit.id} habit={habit} />
 			))}
 		</div>

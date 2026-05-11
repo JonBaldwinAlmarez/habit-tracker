@@ -5,18 +5,23 @@ import {
 	startOfWeek,
 	format,
 	isFuture,
+	isSameDay,
 } from "date-fns";
 
-export type Habit = { id: string; name: string };
+export type Habit = { id: string; name: string; completions: Date[] };
 
 type HabitItemProps = {
 	habit: Habit;
+	deleteHabit: (id: string) => void;
+	toggleHabit: (id: string, date: Date) => void;
 };
 type HabitListProps = {
 	habits: Habit[];
+	deleteHabit: (id: string) => void;
+	toggleHabit: (id: string, date: Date) => void;
 };
 
-function HabitItem({ habit }: HabitItemProps) {
+function HabitItem({ habit, deleteHabit, toggleHabit }: HabitItemProps) {
 	const visibledates = eachDayOfInterval({
 		start: startOfWeek(new Date(), { weekStartsOn: 1 }),
 		end: endOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -29,7 +34,11 @@ function HabitItem({ habit }: HabitItemProps) {
 					<span className="font-medium">{habit.name}</span>
 					<span className="text-sm text-amber-400"> 3 </span>
 				</div>
-				<Button variant="ghost-destruction" className="text-xs">
+				<Button
+					onClick={() => deleteHabit(habit.id)}
+					variant="ghost-destruction"
+					className="text-xs"
+				>
 					Delete
 				</Button>
 			</div>
@@ -39,7 +48,13 @@ function HabitItem({ habit }: HabitItemProps) {
 					<Button
 						key={date.toISOString()}
 						disabled={isFuture(date)}
+						onClick={() => toggleHabit(habit.id, date)}
 						className="flex flex-1 flex-col items-center gap-0.5 rounded-lg text-sm"
+						variant={
+							habit.completions.some((d) => isSameDay(date, d))
+								? "primary"
+								: "secondary"
+						}
 					>
 						<span className="font-medium">{format(date, "EEE")}</span>
 						<span>{format(date, "d")}</span>
@@ -50,7 +65,7 @@ function HabitItem({ habit }: HabitItemProps) {
 	);
 }
 
-const HabitList = ({ habits }: HabitListProps) => {
+const HabitList = ({ habits, deleteHabit, toggleHabit }: HabitListProps) => {
 	if (habits.length === 0) {
 		return (
 			<div className="text-center text-zinc-400 py-12">
@@ -61,7 +76,12 @@ const HabitList = ({ habits }: HabitListProps) => {
 	return (
 		<div className="flex flex-col gap-3">
 			{habits.map((habit) => (
-				<HabitItem key={habit.id} habit={habit} />
+				<HabitItem
+					deleteHabit={deleteHabit}
+					toggleHabit={toggleHabit}
+					key={habit.id}
+					habit={habit}
+				/>
 			))}
 		</div>
 	);

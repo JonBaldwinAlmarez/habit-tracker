@@ -1,5 +1,5 @@
 import { isSameDay } from "date-fns";
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { HabitContext, type Habit } from "./habit";
 import { useLocalStorage } from "../hook/useLocalStorage";
 

@@ -2,7 +2,7 @@ import Header from "./components/Header";
 import HabitForm from "./components/HabitForm";
 import HabitList from "./components/HabitList";
 import { HabitProvider } from "./components/context/habitProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addWeeks, eachDayOfInterval, endOfWeek, startOfWeek } from "date-fns";
 
 export default function App() {
@@ -12,6 +12,12 @@ export default function App() {
 		start: startOfWeek(week, { weekStartsOn: 1 }),
 		end: endOfWeek(week, { weekStartsOn: 1 }),
 	});
+
+	useEffect(() => {
+		addEventListener("click", () => {
+			console.log(setWeekOffSet);
+		});
+	}, [weekOffSet]);
 
 	return (
 		<div className="w-full mx-auto p-4 flex flex-col gap-4">

@@ -17,7 +17,7 @@ type HabitItemProps = {
 function HabitItem({ habit }: HabitItemProps) {
 	const { deleteHabit, toggleHabit } = useHabits();
 
-	const visibledates = eachDayOfInterval({
+	const visibleDates = eachDayOfInterval({
 		start: startOfWeek(new Date(), { weekStartsOn: 1 }),
 		end: endOfWeek(new Date(), { weekStartsOn: 1 }),
 	});
@@ -43,7 +43,7 @@ function HabitItem({ habit }: HabitItemProps) {
 			</div>
 
 			<div className="flex gap-2">
-				{visibledates.map((date) => (
+				{visibleDates.map((date) => (
 					<Button
 						key={date.toISOString()}
 						disabled={isFuture(date)}

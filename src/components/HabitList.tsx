@@ -8,19 +8,15 @@ import {
 	isSameDay,
 	subDays,
 } from "date-fns";
+import { useHabits, type Habit } from "./context/habit";
 
 type HabitItemProps = {
 	habit: Habit;
-	deleteHabit: (id: string) => void;
-	toggleHabit: (id: string, date: Date) => void;
-};
-type HabitListProps = {
-	habits: Habit[];
-	deleteHabit: (id: string) => void;
-	toggleHabit: (id: string, date: Date) => void;
 };
 
-function HabitItem({ habit, deleteHabit, toggleHabit }: HabitItemProps) {
+function HabitItem({ habit }: HabitItemProps) {
+	const { deleteHabit, toggleHabit } = useHabits();
+
 	const visibledates = eachDayOfInterval({
 		start: startOfWeek(new Date(), { weekStartsOn: 1 }),
 		end: endOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -68,7 +64,8 @@ function HabitItem({ habit, deleteHabit, toggleHabit }: HabitItemProps) {
 	);
 }
 
-const HabitList = ({ habits, deleteHabit, toggleHabit }: HabitListProps) => {
+const HabitList = () => {
+	const { habits } = useHabits();
 	if (habits.length === 0) {
 		return (
 			<div className="text-center text-zinc-400 py-12">
@@ -79,12 +76,7 @@ const HabitList = ({ habits, deleteHabit, toggleHabit }: HabitListProps) => {
 	return (
 		<div className="flex flex-col gap-3">
 			{habits.map((habit) => (
-				<HabitItem
-					deleteHabit={deleteHabit}
-					toggleHabit={toggleHabit}
-					key={habit.id}
-					habit={habit}
-				/>
+				<HabitItem key={habit.id} habit={habit} />
 			))}
 		</div>
 	);

@@ -9,8 +9,6 @@ import {
 	subDays,
 } from "date-fns";
 
-export type Habit = { id: string; name: string; completions: Date[] };
-
 type HabitItemProps = {
 	habit: Habit;
 	deleteHabit: (id: string) => void;
@@ -35,7 +33,9 @@ function HabitItem({ habit, deleteHabit, toggleHabit }: HabitItemProps) {
 			<div className="flex items-center justify-between">
 				<div className="flex gap-3 items-center">
 					<span className="font-medium">{habit.name}</span>
-					<span className="text-sm text-amber-400"> {streak} </span>
+					{streak !== 0 && (
+						<span className="text-sm text-amber-400">{streak}</span>
+					)}
 				</div>
 				<Button
 					onClick={() => deleteHabit(habit.id)}
